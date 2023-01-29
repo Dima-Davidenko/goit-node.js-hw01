@@ -4,8 +4,12 @@ const contacts = require('./contacts.js');
 const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
     case 'list':
-      const allContacts = await contacts.listContacts();
-      console.log(allContacts);
+      try {
+        const allContacts = await contacts.listContacts();
+        console.log(allContacts);
+      } catch (error) {
+        console.log('\x1B[31mAn error has occurred! Try again.');
+      }
       break;
 
     case 'get':
@@ -13,8 +17,16 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
         console.log('\x1B[31mNot successful. ID is required!');
         break;
       }
-      const contact = await contacts.getContactById(String(id));
-      console.log(contact);
+      try {
+        const contact = await contacts.getContactById(String(id));
+        if (contact === null) {
+          console.log(`\x1B[31mAn error has occurred! Can't find contact with ID ${id}!`);
+          break;
+        }
+        console.log(contact);
+      } catch (error) {
+        console.log('\x1B[31mAn error has occurred! Try again.');
+      }
       break;
 
     case 'add':
@@ -35,8 +47,12 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
         console.log('\x1B[31mNot successful. Please enter all fields!');
         break;
       }
-      const newContact = await contacts.addContact(name, email, phone);
-      console.log('\x1B[32mCreated \n\x1b[0m', newContact);
+      try {
+        const newContact = await contacts.addContact(name, email, phone);
+        console.log('\x1B[32mCreated \n\x1b[0m', newContact);
+      } catch (error) {
+        console.log('\x1B[31mAn error has occurred! Try again.');
+      }
       break;
 
     case 'remove':
@@ -44,8 +60,16 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
         console.log('\x1B[31mNot successful. ID is required!');
         break;
       }
-      const updContacts = await contacts.removeContact(String(id));
-      console.log('\x1B[32mDeleted \nUpdated contacts list:\n\x1b[0m', updContacts);
+      try {
+        const updContacts = await contacts.removeContact(String(id));
+        if (updContacts === null) {
+          console.log(`\x1B[31mAn error has occurred! Can't find contact with ID ${id}!`);
+          break;
+        }
+        console.log('\x1B[32mDeleted \nUpdated contacts list:\n\x1b[0m', updContacts);
+      } catch (error) {
+        console.log('\x1B[31mAn error has occurred! Try again.');
+      }
       break;
 
     default:

@@ -14,12 +14,16 @@ const listContacts = async () => {
 
 const getContactById = async contactId => {
   const allContacts = await listContacts();
-  return allContacts.find(item => item.id === contactId);
+  const contact = allContacts.find(item => item.id === contactId);
+  return contact ? contact : null;
 };
 
 const removeContact = async contactId => {
   const allContacts = await listContacts();
   const indexToDelete = allContacts.findIndex(item => item.id === contactId);
+  if (indexToDelete === -1) {
+    return null;
+  }
   allContacts.splice(indexToDelete, 1);
   updateContacts(allContacts);
   return allContacts;
